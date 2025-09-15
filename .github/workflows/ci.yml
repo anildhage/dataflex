@@ -1,0 +1,45 @@
+# filepath: /Users/anildhage/Downloads/dataflex/.github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - feature/*
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          poetry install
+
+      # Run linters
+      - name: Run Black
+        run: poetry run black --check .
+
+      - name: Run Flake8
+        run: poetry run flake8
+
+      # Run tests
+      - name: Run Tests
+        run: poetry run pytest
