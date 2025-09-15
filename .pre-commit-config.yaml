@@ -1,0 +1,18 @@
+repos:
+  # Black: automatically formats Python code to be clean and consistent
+  - repo: https://github.com/psf/black
+    rev: 23.7.0
+    hooks:
+      - id: black  # formats code, fixes spacing, indentation, line breaks
+
+  # Flake8: linter to check Python code for style issues and errors
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.1.0
+    hooks:
+      - id: flake8  # warns about unused variables, bad indentation, long lines, etc.
+
+  # isort: automatically sorts Python imports
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort  # organizes imports into standard order to keep them neat
