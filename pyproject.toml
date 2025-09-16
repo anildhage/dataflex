@@ -29,10 +29,13 @@ dev = [
 
 [tool.black]
 line-length = 88
-target-version = ["py313"]
+target-version = ["py312"]
 
 [tool.isort]
 profile = "black"
 
 [tool.poetry]
 package-mode = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
