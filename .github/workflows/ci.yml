@@ -1,4 +1,4 @@
-# filepath: /Users/anildhage/Downloads/dataflex/.github/workflows/ci.yml
+# filepath: .github/workflows/ci.yml
 name: CI
 
 on:
@@ -17,29 +17,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the code
+      # 1️⃣ Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up Python
+      # 2️⃣ Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.13
 
-      # Install dependencies
-      - name: Install dependencies
-        run: |
-          pip install poetry
-          poetry install
+      # 3️⃣ Install Poetry
+      - name: Install Poetry
+        run: pip install poetry
 
-      # Run linters
+      # 4️⃣ Install all dependencies including dev tools
+      - name: Install dependencies
+        run: poetry install --with dev
+
+      # 5️⃣ Run code format and lint checks
       - name: Run Black
         run: poetry run black --check .
 
       - name: Run Flake8
         run: poetry run flake8
 
-      # Run tests
+      - name: Run isort
+        run: poetry run isort --check-only .
+
+      # 6️⃣ Run tests
       - name: Run Tests
         run: poetry run pytest
