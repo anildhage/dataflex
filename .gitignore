@@ -19,6 +19,7 @@ build/
 
 # Poetry
 poetry.lock
+# Keep pyproject.toml in repo; do not ignore
 
 # Django specific
 *.log
@@ -39,6 +40,29 @@ docker-compose.override.yaml
 
 # macOS
 .DS_Store
+.AppleDouble
+.LSOverride
 
-# System files
+# Thumbnails & system files
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Python testing / coverage
+.coverage
+.tox/
+.nox/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Mypy / type check
+.mypy_cache/
+.dmypy.json
+.pyre/
+
+# Pre-commit
+# .pre-commit-config.yaml
+# .pre-commit/
