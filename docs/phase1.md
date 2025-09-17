@@ -1,107 +1,126 @@
-Summary of Steps to Complete Phase 1 (Foundation & End-to-End Infrastructure Setup)
-Prepare Development Environment
+Perfect 👍 Let’s merge your original Phase 1 with the catalog + access requirements, but keep it concise, structured, and visual so it can guide you as a roadmap.
 
-Install necessary tools: Python 3.x, Docker, Docker Compose.
-Choose a dependency management tool (Poetry or Pipenv) and configure it.
-Initialize a Git monorepo with the required folder structure.
-DataFlex/
-├── platform/
-├── microservices/
-├── shared/
-├── infrastructure/
-└── docs/
-Set up code linting and formatting tools (e.g., Black, Flake8).
-Define Git Workflow and Branching
+⸻
 
-Decide on a branching strategy (e.g., main, dev, feature branches).
-Create a GitHub repository and configure GitHub Actions for CI with a minimal workflow.
-Create Core Microservices
+📑 Phase 1: Core Requirements for DataFlex
 
-Authentication Service:
-Set up a Django project with a custom user model supporting roles.
-Implement JWT/OAuth2 authentication endpoints (register, login, token refresh, logout).
-Write unit tests for user management and authentication flows.
-Profile Service:
-Create a Django app for user profiles linked to authentication users.
-Implement CRUD APIs for profile data.
-Write unit tests for profile endpoints.
-Data Upload Service:
-Implement file upload APIs with metadata storage in PostgreSQL.
-Add support for versioning and retrieval.
-Write unit tests for file upload scenarios.
-Containerize Microservices
+1. Authentication Service
+	•	Django project with custom user model supporting roles (e.g., owner, viewer, admin).
+	•	Implement JWT/OAuth2 endpoints: register, login, token refresh, logout.
+	•	Unit tests for authentication & role enforcement.
 
-Write Dockerfiles for each microservice.
-Set up a Docker Compose configuration to orchestrate the local multi-container environment.
-Verify that containers build, run, and communicate locally.
-Infrastructure as Code (IaC) Setup
+✅ Solves: secure login, identity, and role-based permissions.
 
-Write basic IaC scripts (Terraform/Ansible) to provision local or cloud development resources.
-Simplify the setup for local testing (e.g., local PostgreSQL containers).
-Document the provisioning steps.
-API Gateway Implementation
+⸻
 
-Set up a simple API Gateway using NGINX or Traefik as a reverse proxy.
-Define routing rules to forward requests to corresponding microservices.
-Implement basic security (e.g., token validation middleware).
-Setup CI/CD Pipeline
+2. Profile Service
+	•	Django app for user profiles linked to authentication users.
+	•	CRUD APIs for profile details (name, bio, org, skills).
+	•	Public visibility toggle (what can be shown in the catalog).
+	•	Unit tests for profile endpoints.
 
-Configure GitHub Actions workflows for:
-Code linting and testing on push.
-Docker image build and local push simulation.
-Optional manual deployment scripts for the local environment.
-Develop Simple Demo Microservice
+✅ Solves: gives each dataset/microservice an identifiable owner.
 
-Build a “Hello World” microservice as a proof of concept and pipeline test.
-Containerize and deploy it locally.
-Add service metadata for catalog registration.
+⸻
+
+3. Data Upload Service
+	•	File upload APIs with metadata storage in PostgreSQL.
+	•	Support versioning & retrieval of datasets.
+	•	Metadata flags:
+	•	Private (default): only owner can access.
+	•	Public Metadata: name, description, schema visible in catalog.
+	•	Unit tests for upload & versioning.
+
+✅ Solves: secure dataset storage with controlled visibility.
+
+⸻
+
+4. Dataset Access Management (extension of upload)
+	•	API for requesting access to private datasets.
+	•	Owners can approve/reject requests.
+	•	Track access requests in DB.
+
+✅ Solves: controlled dataset sharing.
+
+⸻
+
+5. Catalog Service (public showcase)
+	•	Public endpoint that lists:
+	•	Microservices users have built (title, description, purpose).
+	•	Metadata of datasets marked public.
+	•	Owner profile (linked via Profile Service).
+	•	Option to mark microservice as public.
+	•	Links to demo endpoints (read-only).
+
+✅ Solves: lets general public browse & learn from demos.
+
+⸻
+
+6. Demo Endpoint Exposure
+	•	Each user-built ETL/transformation can expose a limited public API.
+	•	Example: returns sample transformed data without exposing full dataset.
+
+✅ Solves: public gets hands-on demo without access to raw data.
+
+⸻
+
+📌 Example User Flow
+
+Story: “Anil publishes a microservice for others to learn”
+	1.	Anil logs in → uploads customers.csv.
+	2.	Builds an ETL microservice that cleans the data.
+	3.	Marks the microservice as public in the catalog.
+	4.	Catalog shows: “Customer Cleaning Pipeline (by Anil)” with description & dataset metadata.
+	5.	Student browses catalog → sees demo output via API.
+	6.	Student clicks Request Access to full dataset.
+	7.	Anil gets notified → approves → student now downloads dataset version.
+
+⸻
+
+🔄 Flowcharts
+
+1. Dataset Upload & Visibility
+
+flowchart TD
+    U[User Uploads File] --> M[Metadata Saved in DB]
+    M --> |Private Default| P[Only Owner Access]
+    M --> |Mark Public| C[Catalog Visible]
+    C --> D[Public sees name/description/schema only]
 
 
+⸻
 
-Detailed Guide for Each Step
-1. Prepare Development Environment
-Install Python 3.x, Docker, and Docker Compose on your local machine.
-Choose between Poetry or Pipenv for dependency management and configure it in your project.
-Initialize a Git monorepo with the following folder structure:
-Set up code linting and formatting tools like Black and Flake8. Add their configurations to the project.
-2. Define Git Workflow and Branching
-Decide on a branching strategy (e.g., main, dev, feature/*).
-Create a GitHub repository and push your monorepo.
-Set up GitHub Actions with a minimal CI workflow to run linting and tests.
-3. Create Core Microservices
-Authentication Service:
-Use Django to create a project and app.
-Extend the default user model to include roles (e.g., admin, user).
-Implement endpoints for user registration, login, token refresh, and logout using JWT/OAuth2.
-Write unit tests for all authentication flows.
-Profile Service:
-Create a Django app for managing user profiles.
-Link profiles to the authentication service’s user model.
-Implement CRUD APIs for profile data.
-Write unit tests for profile endpoints.
-Data Upload Service:
-Create APIs for file uploads, storing metadata in PostgreSQL.
-Add support for file versioning and retrieval.
-Write unit tests for file upload scenarios.
-4. Containerize Microservices
-Write Dockerfiles for each microservice, ensuring they include all dependencies.
-Create a docker-compose.yml file to orchestrate the services locally.
-Test that all containers build, run, and communicate with each other.
-5. Infrastructure as Code (IaC) Setup
-Write basic Terraform or Ansible scripts to provision resources like PostgreSQL containers.
-Focus on simplifying the setup for local development.
-Document the steps for provisioning and running the infrastructure.
-6. API Gateway Implementation
-Use NGINX or Traefik to set up an API Gateway.
-Define routing rules to forward requests to the appropriate microservices.
-Add basic security features, such as token validation middleware.
-7. Setup CI/CD Pipeline
-Configure GitHub Actions workflows to:
-Run linting and unit tests on every push.
-Build Docker images and simulate local deployment.
-Optionally, add manual deployment scripts for the local environment.
-8. Develop Simple Demo Microservice
-Create a “Hello World” microservice to test the pipeline and integration.
-Containerize the microservice and deploy it locally using Docker Compose.
-Add metadata for the service to register it in the catalog.
-This guide provides a clear roadmap for completing Phase 1. Let me know if you need help with any specific step!
+2. Dataset Access Request
+
+flowchart TD
+    V[Visitor Browses Catalog] --> R[Clicks Request Access]
+    R --> O[Owner Receives Request]
+    O --> |Approve| A[Visitor Gets Dataset Access]
+    O --> |Reject| X[Request Closed]
+
+
+⸻
+
+3. Public Microservice Demo
+
+flowchart TD
+    O[Owner Builds ETL Service] --> P[Marks Public in Catalog]
+    P --> C[Catalog Lists Microservice]
+    C --> V[Visitor Browses Demo]
+    V --> D[Demo API Returns Sample Output]
+
+
+⸻
+
+🚀 Phase 1 Deliverables
+	•	✅ Authentication, Profile, Data Upload (private + metadata).
+	•	✅ Dataset Access Requests.
+	•	✅ Public Catalog (metadata + microservice showcase).
+	•	✅ Demo endpoints for trying microservices.
+	•	✅ Unit tests across all services.
+
+⸻
+
+👉 This setup gives you a secure foundation for data + microservices, while also opening the door for community learning and dataset sharing in Phase 2.
+
+Do you want me to also draft example Django app structure (folders/services) for these 5 services so you can scaffold them right away?
